@@ -791,3 +791,125 @@ body {
     box-shadow: none;
   }
 }
+
+/* Welcome Modal Styles */
+.welcomeModalContent {
+  background: white;
+  border-radius: 16px;
+  padding: 40px 32px;
+  max-width: 450px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.welcomeIcon {
+  font-size: 64px;
+  margin-bottom: 20px;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.welcomeTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 8px;
+}
+
+.welcomeCompany {
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+.welcomeSubtitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 16px;
+}
+
+.welcomeText {
+  font-size: 14px;
+  color: #718096;
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+.welcomeBtn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.welcomeBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.welcomeBtn:active {
+  transform: translateY(0);
+}
+
+/* Mobile responsive for welcome modal */
+@media (max-width: 480px) {
+  .welcomeModalContent {
+    padding: 32px 24px;
+  }
+
+  .welcomeIcon {
+    font-size: 48px;
+  }
+
+  .welcomeCompany {
+    font-size: 28px;
+  }
+
+  .welcomeTitle {
+    font-size: 18px;
+  }
+
+  .welcomeSubtitle {
+    font-size: 16px;
+  }
+
+  .welcomeText {
+    font-size: 13px;
+  }
+}

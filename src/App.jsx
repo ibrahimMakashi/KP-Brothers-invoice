@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styles from "./App.module.css";
 import html2pdf from "html2pdf.js";
 
@@ -7,6 +7,7 @@ function App() {
   const [isPreview, setIsPreview] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState(null);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(true);
 
   const [seller, setSeller] = useState({
     name: "K P BROTHERS",
@@ -44,6 +45,44 @@ function App() {
   ]);
 
   const invoiceRef = useRef();
+
+  // Disable pull-to-refresh on mobile
+  useEffect(() => {
+    // Prevent pull-to-refresh
+    const preventPullToRefresh = (e) => {
+      // Prevent the default pull-to-refresh behavior
+      if (e.touches.length > 1) {
+        return;
+      }
+
+      const touch = e.touches[0];
+      const scrollTop =
+        document.documentElement.scrollTop || document.body.scrollTop;
+
+      // If at the top of the page and pulling down, prevent default
+      if (scrollTop === 0 && touch.clientY > 0) {
+        e.preventDefault();
+      }
+    };
+
+    // Add touch event listeners
+    document.addEventListener("touchstart", preventPullToRefresh, {
+      passive: false,
+    });
+    document.addEventListener("touchmove", preventPullToRefresh, {
+      passive: false,
+    });
+
+    // Prevent overscroll behavior with CSS
+    document.body.style.overscrollBehavior = "none";
+
+    // Cleanup
+    return () => {
+      document.removeEventListener("touchstart", preventPullToRefresh);
+      document.removeEventListener("touchmove", preventPullToRefresh);
+      document.body.style.overscrollBehavior = "auto";
+    };
+  }, []);
 
   const calculateItemAmount = (qty, rate) => {
     return (parseFloat(qty || 0) * parseFloat(rate || 0)).toFixed(2);
@@ -663,6 +702,27 @@ function App() {
             </button>
             <button className={styles.downloadBtn} onClick={exportToPDF}>
               Download PDF
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Welcome Modal */}
+      {showWelcomeModal && (
+        <div className={styles.modal}>
+          <div className={styles.welcomeModalContent}>
+            <div className={styles.welcomeIcon}>🎉</div>
+            <h2 className={styles.welcomeTitle}>Welcome to</h2>
+            <h1 className={styles.welcomeCompany}>K P BROTHERS</h1>
+            <p className={styles.welcomeSubtitle}>Invoice Generator</p>
+            <p className={styles.welcomeText}>
+              Create professional GST invoices quickly and easily
+            </p>
+            <button
+              className={styles.welcomeBtn}
+              onClick={() => setShowWelcomeModal(false)}
+            >
+              Get Started
             </button>
           </div>
         </div>

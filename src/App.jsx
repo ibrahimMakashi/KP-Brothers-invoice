@@ -46,40 +46,49 @@ function App() {
 
   const invoiceRef = useRef();
 
-  // Disable pull-to-refresh on mobile
+  // Disable pull-to-refresh on mobile - IMPROVED VERSION
   useEffect(() => {
-    // Prevent pull-to-refresh
-    const preventPullToRefresh = (e) => {
-      // Prevent the default pull-to-refresh behavior
-      if (e.touches.length > 1) {
-        return;
-      }
+    let startY = 0;
 
-      const touch = e.touches[0];
+    const handleTouchStart = (e) => {
+      startY = e.touches[0].clientY;
+    };
+
+    const handleTouchMove = (e) => {
+      const currentY = e.touches[0].clientY;
       const scrollTop =
         document.documentElement.scrollTop || document.body.scrollTop;
 
-      // If at the top of the page and pulling down, prevent default
-      if (scrollTop === 0 && touch.clientY > 0) {
+      // Only prevent if:
+      // 1. At the top of the page (scrollTop === 0)
+      // 2. User is pulling down (currentY > startY)
+      // 3. Not touching an input/button/select element
+      const target = e.target;
+      const isInteractiveElement =
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.tagName === "SELECT" ||
+        target.tagName === "BUTTON" ||
+        target.closest("button") !== null;
+
+      if (scrollTop === 0 && currentY > startY && !isInteractiveElement) {
         e.preventDefault();
       }
     };
 
-    // Add touch event listeners
-    document.addEventListener("touchstart", preventPullToRefresh, {
-      passive: false,
+    // Add event listeners with passive: false only for touchmove
+    document.addEventListener("touchstart", handleTouchStart, {
+      passive: true,
     });
-    document.addEventListener("touchmove", preventPullToRefresh, {
-      passive: false,
-    });
+    document.addEventListener("touchmove", handleTouchMove, { passive: false });
 
     // Prevent overscroll behavior with CSS
     document.body.style.overscrollBehavior = "none";
 
     // Cleanup
     return () => {
-      document.removeEventListener("touchstart", preventPullToRefresh);
-      document.removeEventListener("touchmove", preventPullToRefresh);
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchmove", handleTouchMove);
       document.body.style.overscrollBehavior = "auto";
     };
   }, []);
